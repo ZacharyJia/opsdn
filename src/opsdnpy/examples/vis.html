@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Visual</title>
+  <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+  <script src="echarts.min.js"></script>
+</head>
+<body>
+<button onclick="getData()">Refresh</button>
+<div id="main" style="width: 800px; height: 600px"></div>
+<script>
+
+  var chartDom = document.getElementById('main');
+  var myChart = echarts.init(chartDom);
+  var option;
+
+  var nodes = [
+    {
+      fixed: true,
+      x: myChart.getWidth() / 2,
+      y: myChart.getHeight() / 2,
+      symbolSize: 20,
+      id: '-1'
+    }
+  ];
+  var edges = [];
+  option = {
+    series: [
+      {
+        type: 'graph',
+        layout: 'force',
+        animation: false,
+        data: nodes,
+        force: {
+          // initLayout: 'circular'
+          // gravity: 0
+          repulsion: 100,
+          edgeLength: 5,
+        },
+        label: {
+          position: 'right'
+        },
+        edges: edges,
+        draggable: true,
+      }
+    ]
+  };
+  option && myChart.setOption(option);
+  getData();
+
+  function getData() {
+    axios.get('topo.json')
+      .then(function (response) {
+        response.data.nodes.forEach((node) => {
+          if (node.type === 'switch') {
+            node.symbol = 'circle'
+          } else {
+            node.symbol = 'rect'
+            node.itemStyle = {
+              color: 'red',
+            }
+          }
+          node.name = node.id;
+        })
+        myChart.setOption({
+          series: [
+            {
+              roam: true,
+              data: response.data.nodes,
+              edges: response.data.edges
+            }
+          ]
+        });
+
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+
+
+</script>
+</body>
+</html>
