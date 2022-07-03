@@ -6,13 +6,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="opsdnpy",
-    version="0.1.3",
+    version="0.2",
     author="Jia Zequn",
     author_email="zachary@bjtu.edu.cn",
     description="A python package for OPSDN",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/ZacharyJia/opsdnpy",
+    url="https://github.com/ZacharyJia/opsdn",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
