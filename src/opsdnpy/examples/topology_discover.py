@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This file is modified from Ryu By Zachary
+
 import json
 import logging
 import struct
@@ -151,7 +153,7 @@ class TopologyDiscover:
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
 
-        # 安装lldp处理流表
+        # Install LLDP flow entry
         self.install_lldp_flow(datapath)
 
         self.install_default_packet_in_flow(datapath)

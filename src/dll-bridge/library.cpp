@@ -28,7 +28,7 @@ void _intrpt_schedule_self(double time, int code)
     api.intrpt_schedule_self(time, code);
 }
 
-//char*转wchar_t*
+// convert char* to wchar_t*
 wchar_t* AnsiToUnicode(const char* szStr)
 {
     int nLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szStr, -1, NULL, 0 );
@@ -41,7 +41,7 @@ wchar_t* AnsiToUnicode(const char* szStr)
     return pResult;
 }
 
-//wchar_t*ת转char*
+// convert wchar_t* to char*
 char* UnicodeToAnsi(const wchar_t* szStr)
 {
     int nLen = WideCharToMultiByte( CP_ACP, 0, szStr, -1, NULL, 0, NULL, NULL );
@@ -67,9 +67,8 @@ void replace_path_slash(char* path)
 
 void init_op_sdn(OpSdnApi opSdnApi, OpSdnOptions options)
 {
-    printf("init_op_sdn called\n");
     auto res = Py_IsInitialized();
-    printf("Py_IsInitialized: %d\n", res);
+    std::cout << "Py_IsInitialized: " << res << endl;
 
     api = opSdnApi;
     wchar_t* python_home_wchar = AnsiToUnicode(options.python_home);
@@ -88,9 +87,11 @@ void init_op_sdn(OpSdnApi opSdnApi, OpSdnOptions options)
     Py_SetPath(python_path_wchar);
     delete python_path_wchar;
 
+    // insert opsdn module to python, therefore the python code could use them for calling c++ code.
     PyImport_AppendInittab("opsdn", &PyInit_opsdn);
     Py_Initialize();
 
+    // do some preparations, like add library paths.
     PyRun_SimpleString("import sys");
     char script_buf[SCRIPT_BUF_LEN];
     int cnt = snprintf(script_buf, SCRIPT_BUF_LEN, "sys.path.append('%s')", options.script_path);
@@ -120,6 +121,7 @@ void init_op_sdn(OpSdnApi opSdnApi, OpSdnOptions options)
     std::cout << script_buf << std::endl;
     PyRun_SimpleString(script_buf);
 
+    // create instance of controller class from entry script
     auto pmod = PyImport_ImportModule(options.entry_script);
     PyErr_Print();
     std::cout << "pmod: " << pmod << std::endl;
@@ -142,6 +144,7 @@ void init_op_sdn(OpSdnApi opSdnApi, OpSdnOptions options)
     PyErr_Print();
     std::cout << "ptimer_mod: " << pmod << std::endl;
 
+    // create a OpTimer instance for supporting timer
     auto pTimerClass = PyObject_GetAttrString(pmod, "OpTimer");
     PyErr_Print();
     std::cout << "pTimerClass: " << pTimerClass << std::endl;
@@ -154,6 +157,7 @@ void init_op_sdn(OpSdnApi opSdnApi, OpSdnOptions options)
     Py_DecRef(pTimerClass);
     Py_DecRef(pargs);
 
+    // get timer_timeout method, we will call it when self interrupt is triggered.
     pTimerTimeoutMethod = PyObject_GetAttrString(pTimerInstance, "timer_timeout");
     std::cout << "pTimerTimeoutMethod: " << pTimerTimeoutMethod << std::endl;
 
@@ -163,25 +167,18 @@ void init_op_sdn(OpSdnApi opSdnApi, OpSdnOptions options)
 
 void handle_dp_packet(int conn_id, char *msg, int size)
 {
-    std::cout << ("handle packet from opnet!\n");
-    std::cout << "conn_id:" << conn_id << " " << "size: " << size << std::endl;
-//    for (int i = 0; i < size; i++) {
-//        std::cout << msg[i];
-//    }
-//    std::cout << std::endl;
-    PyRun_SimpleString("print('Hello from Python!!!')\n");
-//    PyRun_SimpleString("import sys\nprint(sys.version)\n");
-//    PyRun_SimpleString("import opsdn\n");
+    // std::cout << ("handle packet from opnet!\n");
+    // std::cout << "conn_id:" << conn_id << " " << "size: " << size << std::endl;
 
+    // prepare arguments
     auto pargs = Py_BuildValue("(iy#i)", conn_id, msg, size, size);
     auto pres = PyEval_CallObject(pHandleMethod, pargs);
-    PyErr_Print();
-    char* cstr;
-    PyArg_Parse(pres, "s", &cstr);
-    std::cout << "call pHandleMethod, result: " << cstr << std::endl;
+    PyErr_Print(); // if we get some errors, print them
 
-//    PyRun_SimpleString("opsdn.send_to_dp(123, bytearray(b'aaabbb'), 10)\n");
-    // Py_Finalize();
+    // currently the calling result is not used.
+    // char* cstr;
+    // PyArg_Parse(pres, "s", &cstr);
+    // std::cout << "call pHandleMethod, result: " << cstr << std::endl;
 }
 
 void timer_timeout(int code)

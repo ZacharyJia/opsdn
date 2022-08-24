@@ -7,24 +7,23 @@ import opsdn
 from opsdnpy.app import controller_app, set_ev_handler
 from opsdnpy.op_timer import OpTimer
 
+# A basic controller app for handling basic openflow interaction.
 
 @controller_app
 class BasicApp:
     def __init__(self):
         self.logger = logging.getLogger('BasicApp')
 
-    def repeat_run(self, user_data):
-        self.logger.info('[%lf] Repeat running......%d', opsdn.sim_time(), user_data)
-        OpTimer().set_op_timer(opsdn.sim_time() + 30, self.repeat_run, user_data + 1)
-
     @set_ev_handler(ofp13.OFPHello)
     def handle_hello(self, dp, msg):
-        self.logger.info('%lf: handleHello is called!!', opsdn.sim_time())
+        self.logger.debug('%lf: handle_hello is called!!', opsdn.sim_time())
+        # Reply a Hello and FeatureRequest packe to the datapath.
         dp.send_msg(ofp13.OFPHello(dp))
         dp.send_msg(ofp13.OFPFeaturesRequest(dp))
 
     @set_ev_handler(ofp13.OFPSwitchFeatures)
     def handle_switch_features(self, dp, msg):
+        # Record the datapath id cause the datapath id is sent in feature reply at the first time.
         dp.id = msg.datapath_id
 
     @set_ev_handler(ofp13.OFPEchoRequest)

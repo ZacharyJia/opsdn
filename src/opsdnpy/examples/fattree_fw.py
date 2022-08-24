@@ -31,7 +31,7 @@ class FattreeForward:
         eth, pkt_type, pkt_data = ethernet.ethernet.parser(msg.data)
         self.logger.info('self.G = ' + str(self.G))
         if eth.ethertype == ether_types.ETH_TYPE_IP:
-            # 暂时只转发ip数据包
+            # We only forward IP packet here.
             self.logger.info('IP packet from %s to %s', eth.src, eth.dst)
             try:
                 paths = [p for p in nx.all_shortest_paths(self.G, dpid_to_str(dp.id), eth.dst)]

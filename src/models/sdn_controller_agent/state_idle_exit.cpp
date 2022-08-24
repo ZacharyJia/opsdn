@@ -12,29 +12,32 @@ void sdn_controller_agent_exit_idle() {
 intrpt_type = op_intrpt_type();
 intrpt_code = op_intrpt_code();
 
-printf("Agent State Idle: intrpt type: %d, code: %d\n", intrpt_type, intrpt_code);
+// printf("Agent State Idle: intrpt type: %d, code: %d\n", intrpt_type, intrpt_code);
 
+// remote interrupt, expected to be from tcp module
 if (intrpt_type == OPC_INTRPT_REMOTE)
 {
     iciptr = op_intrpt_ici();
     op_ici_format(iciptr, ici_name);
-    printf("ici format is %s\n", ici_name);
+    // printf("ici format is %s\n", ici_name);
     if (strcmp(ici_name, "tcp_status_ind") == 0) {
         int conn_id;
         int status;
-        op_ici_print(iciptr);
+        // op_ici_print(iciptr);
         op_ici_attr_get_int32(iciptr, "conn_id", &conn_id);
         op_ici_attr_get_int32(iciptr, "status", &status);
 
         if (status == TCPC_IND_ESTAB || status == TCPC_IND_SEG_FWD) {
+            // if tcp tell us the connection is established or a segment will be forwarded,
+            // we reply them we are ready to received packet now.
             tcp_receive_command_send(tcp_app_handle_map[conn_id], 1);
         }
     } else if (strcmp(ici_name, "tcp_open_ind") == 0) {
-        // 当有一个tcp client来连接，占用了当前的listen端口的时候，就需要重新开一个监听端口。
-        // 不能直接调用，会报错，搞一个自中断来做这个事情
+        // When a tcp client connected to us, the original app handle will be occupied and we need start a new listen.
+        // But we cannot call it here because we are in the improper environment. So we make a self interrupt to notify us to listen.
         op_intrpt_schedule_self(op_sim_time(), INTRPT_CODE_CREATE_NEW_CONN);
     } else if(strcmp(ici_name, "sdn_controller_send_req") == 0) {
-        // 来自控制器的数据包要发出去
+        // we will deserialize the openflow packet from the controller and send them to tcp module.
         int conn_id;
         char* msg_buf;
         int msg_len;
@@ -48,10 +51,6 @@ if (intrpt_type == OPC_INTRPT_REMOTE)
         {
             tcp_data_send(tcp_app_handle_map[conn_id], pkptr);
         }
-
-        // pkptr = op_pk_create(msg_len * 8);
-        // op_pk_fd_set_ptr(pkptr, 0, msg_buf, OPC_FIELD_SIZE_UNCHANGED, op_prg_mem_copy_create, op_prg_mem_free, msg_len);
-        // tcp_data_send(tcp_app_handle_map[conn_id], pkptr);
     }
 }
 else if (intrpt_type == OPC_INTRPT_STRM)

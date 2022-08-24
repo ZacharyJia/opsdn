@@ -20,8 +20,8 @@ def sim_time():
 def intrpt_schedule_self(time, code):
     _intrpt_schedule_self(time, code)
 
-cdef public sayHi():
-    pass
+# cdef public sayHi():
+#    pass
 
 # cdef public send():
 #     a = 'aaa'

@@ -17,14 +17,6 @@ int controller_support_send_to_datapath(int conn_id, char* msg, int size)
     op_intrpt_schedule_remote(op_sim_time(), 0, op_id_self());
     op_ici_install(OPC_NIL);
 
-    // OpT_Packet_Size converted = 0;
-    // Packet* pkptr = openflow_tcp_sar_deserialization_callback(msg, size, &converted);
-    
-    // if (pkptr)
-    // {
-    //     // tcp_data_send(tcp_app_handle, pkptr);
-    // }
-
     return 0;
 }
 
