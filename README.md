@@ -35,6 +35,9 @@ The sdn_controller_ethernet_wkstn_adv node model has several configurations in t
 Configuration example shown below:
 ![node_model_configurations](./docs/images/node_model_configurations.png)
 
+# API
+See [OPSDN-API](./docs/opsdnpy-apis.md) for detailed api of opsdnpy.
+
 # Examples
 
 We provides two controller examples in the `src/opsdnpy/example` folder:
