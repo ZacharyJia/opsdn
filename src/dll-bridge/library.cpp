@@ -68,7 +68,7 @@ void replace_path_slash(char* path)
 void init_op_sdn(OpSdnApi opSdnApi, OpSdnOptions options)
 {
     auto res = Py_IsInitialized();
-    std::cout << "Py_IsInitialized: " << res << endl;
+    std::cout << "Py_IsInitialized: " << res << std::endl;
 
     api = opSdnApi;
     wchar_t* python_home_wchar = AnsiToUnicode(options.python_home);

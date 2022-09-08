@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="opsdnpy",
-    version="0.2",
+    version="0.2.1",
     author="Jia Zequn",
     author_email="zachary@bjtu.edu.cn",
     description="A python package for OPSDN",
