@@ -5,6 +5,23 @@
 #include "sv.h"
 #endif
 
+// get the ip address of this node, i.e., the controller's IP
+IpT_Address get_host_ip_address() {
+    FIN(getHostIpAddress);
+
+    char address_str[20];
+    
+    IpT_Rte_Module_Data* module_ptr = ip_support_module_data_get(my_node_objid);
+    Objid intf_info_objid_arr;
+    op_ima_obj_attr_get (module_ptr->ip_parameters_objid, "Interface Information", &intf_info_objid_arr);
+    
+    Objid intf_info_objid = op_topo_child (intf_info_objid_arr, OPC_OBJTYPE_GENERIC, 0);
+    op_ima_obj_attr_get_str(intf_info_objid, "Address", 20, address_str);
+
+    FRET(ip_address_create(address_str));
+}
+
+
 // Create tcp listen on the given port
 // It will be called every time after we accpet a incoming connection
 void create_listen_connection()
@@ -13,15 +30,21 @@ void create_listen_connection()
 
     // The port must be less than 1024 because of limitions from OPNET.
     // I found that we cannot listen multiple times in the same port larger than 1024. It will report errors says the port is occupied.
-    // TODO: we need to move it to the model attribute so that users can customize it. But we need warning them it must be less than 1024.
-    const int port = 998;
+    int port = 998;
+    op_ima_obj_attr_get_int32(op_id_self(), "OpenFlowPort", &port);
+    if (port >= 1024) {
+        op_sim_end("The controller port cannot be greater than 1024 due to the TCP desgin of OPNET.",
+                   "Please fill a port number less than 1024.",
+                   "Do not forget to make changes on the SDN switches too.",
+                   "Bye.");
+    }
 
     // Make a copy of tcp_app_handle for processing subsequent incoming connections.
     auto tcp_app_handle_tmp = tcp_intf_hndl_copy(tcp_app_handle);
 
     // TODO: We need replace the IP will self ip address instead of a fixed string.
     int conn_id = tcp_connection_with_source_open(&tcp_app_handle_tmp, 0, TCPC_PORT_UNSPEC,
-        ip_address_create("192.168.10.2"), port, TCPC_COMMAND_OPEN_PASSIVE, 7);
+        get_host_ip_address(), port, TCPC_COMMAND_OPEN_PASSIVE, 7);
 
     if(conn_id == TCPC_CONN_ID_UNSPEC || conn_id == TCPC_CONN_ID_INVALID)
     {
