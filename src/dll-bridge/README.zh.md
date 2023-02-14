@@ -12,7 +12,7 @@ OPSDN的dll部分代码
 
 ## 用法：
 ### 预编译版本（推荐）：
-1. 从下载页面下载对应的预编译二进制文件。
+1. 从[Release页面](https://github.com/ZacharyJia/opsdn/releases)下载对应的预编译二进制文件。
 2. 将下载得到的预编译二进制文件解压到一个文件夹当中。
 3. 添加如下环境变量：
 - opsdn.dll 所在目录 => PATH

@@ -15,7 +15,7 @@ Details could be find in the the technical report PDF file.
 
 ## Usage:
 ### Prebuild binary (Recommended):
-1. Download the prebuilt binaries on the download page.
+1. Download the prebuilt binaries on the [release page](https://github.com/ZacharyJia/opsdn/releases).
 2. Extract them into a folder.
 3. Add some environment varaibles:
 - folder of opsdn.dll => PATH
