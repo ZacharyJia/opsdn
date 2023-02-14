@@ -1,11 +1,29 @@
-# OPSDN-DLL
-OPSDN的dll部分代码
+# OPSDN-DLL-Bridge
+[中文版](./README.zh.md)
+
+This folder contains codes of the dll-bridge of opsdn.
 
 ## Motivations
-其实正常来说是不需要这个dll的，直接在模型里创建Python虚拟机就行了。但是不知道OP是哪根筋搭错了，它会在内部嵌入一个Python2.7的版本，版本很老旧，并不想使用，并且已经失去支持。因此无奈，只能通过dll隔离一下，才能够嵌入一个新的Python3进来。
 
-这个dll的基本作用就是隔离一下Python3的嵌入，提供C++和Python互相调用当中的上传下达的作用。
+Normally this dll-bridge is not needed, we could just create a Python virtual machine directly in the model to support the controller to run.
+But unfortunately, OPNET has already embedded a very old version of Python(2.7) inside. This version has already not beed supported any more and Ryu cannot run on it.
+Therefore we have to embed a new Python3 through this dll for isolation.
+
+In summary, this dll will isolate the embedded Python2.7 and our Python3，which makes the python3 could run in OPNET.
+Details could be find in the the technical report PDF file.
 
 
-## 用法：
-编译好了，直接把lib、dll文件都扔到op的模型目录下应该就可以了，会自动找的。
+## Usage:
+### Prebuild binary (Recommended):
+1. Download the prebuilt binaries on the download page.
+2. Extract them into a folder.
+3. Add some environment varaibles:
+- folder of opsdn.dll => PATH
+- folder of opsdn.lib => LIB
+- folder of your Python38.dll => PATH
+4. Restart OPNET to make these env take effect.
+
+### Build by your self:
+1. Modify the `CMakeLists.txt` with your own Python3 `include` and `library` path.
+2. Compile it.
+3. Configure the environment variables as prebuilt binary.
