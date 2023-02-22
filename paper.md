@@ -4,7 +4,7 @@ tags:
   - Python
   - C/C++
   - OPNET
-  - Software defined networking
+  - Software-defined networking
   - network simulation
 authors:
   - name: Zequn Jia
@@ -30,19 +30,19 @@ bibliography: paper.bib
 ---
 
 # Summary
-Simulation tools are one of the essential softwares in the research of software-defined networking (SDN). Tradational SDN simulation softwares includes testbeds like Mininet[@mininet] and network simulators with SDN module support such as OPNET. But both kinds of these simulation tools suffer from distortion when in large scale topology or high-traffic scenarios. Mininet usually support network devices no more than 4096 and its CPU and bandwidth are limited by a single server. OPNET needs an interface to connect simualtion and external SDN controller, which requires the simulation speed is strictly the same with real world time. But simulation speed is generally slower than realtime in large scale topologies due to hardware limition.
+Network testing environments are essential softwares in the research of software-defined networking (SDN)[@zavrak2017feature]. Traditional SDN testing tools include emulators like Mininet[@mininet] and simulators with SDN module support such as OPNET, NS3[@ns3] and OMNET++[@omnetpp]. However, both kinds of these tools suffer from distortion when in large-scale topology or high-traffic scenarios. The emulation of network devices typically requires heavy resources, making it difficult for emulators to support large-scale network simulations. For example, Mininet usually supports network devices no more than 4096 and its CPU and bandwidth are limited by a single server. Simulators can usually support larger-scale networks by reducing the simulation speed. However, OPNET needs an interface to connect the simulation to an external SDN controller, which requires the simulation speed to be strictly the same as real-world time. But simulation speed is generally slower than real-time in large-scale topologies due to hardware limitations.
 
-To solve the problem above, we propose OPSDN, a simulation framework for OPNET that allows researchers to conduct *large-scale* SDN simulations in laptop-level hardwares. Instead of an external controller, OPSDN integrate the controller into the simulation to accurately sync the time of switches and the controller. It also offers controller APIs similar to the popular SDN controller framework Ryu[@ryu]. Researcher could use familiar APIs to develop and port controller applications.
+To solve the problem above, we propose OPSDN, a simulation framework for OPNET that allows researchers to conduct *large-scale* SDN simulations in laptop-level hardware. Instead of an external controller, OPSDN integrates the controller into the simulation to accurately sync the time of switches and the controller. It also offers APIs similar to the popular SDN controller framework Ryu[@ryu]. Researchers could use familiar APIs to develop and port controller applications.
 Our simulation results show that the OPSDN controller can achieve the same control capability as the Ryu controller, and avoid unexpected TCP retransmissions introduced by the inconsistent simulation speed. We hope OPSDN will help researchers achieve more accessible large-scale SDN network simulations. Detailed introduction and evaluation are included in @jia_opsdn_2022.
 
 
 
 # Statement of need
-OPSDN provides researchers with a network simulation framework that allows them to conduct large-scale SDN network simulations on laptop-level hardware and leverage the accurate simulation modelling capabilities provided by OPNET. Therefore, the main impacts of this software are as follows.
+OPSDN provides researchers with a network simulation framework that allows them to conduct large-scale SDN network simulations on laptop-level hardware and leverage the accurate simulation modeling capabilities provided by OPNET. Therefore, the main impacts of this software are as follows.
 
-1.	A hybrid simulation framework for OPNET and Ryu-like controllers is proposed to provide a unified event scheduling mechanism based on OPNET DES engine, allowing OPNET and SDN controllers to simulate simultaneously and avoid simulation distortion caused by different event mechanisms. This allows researchers to perform accurate SDN network modelling and simulation without worrying about the simulation architecture.
+1.	A hybrid simulation framework for OPNET and Ryu-like controllers is proposed to provide a unified event scheduling mechanism based on OPNET's Discrete Event Simulation (DES) engine, allowing OPNET and SDN controllers to simulate simultaneously and avoid simulation distortion caused by different event mechanisms. This allows researchers to perform accurate SDN network modeling and simulation without worrying about the simulation architecture.
 
-2. It provides a large-scale simulation mechanism running in laptop-level hardware for SDN simulation, filling the lack of large-scale network simulation capability in various types of network simulation/emulation software. This software enables an acceptable system complexity and hardware cost for simulating the large-scale network simulation. Researchers are able to perform larger-scale simulations such as large-scale SDN data-center networks and large-scale SD-MANETs. In addition, this framework can also help researchers conduct research on scheduling algorithms and topology design with large bandwidth and high traffic, which are difficult to obtain accurate results in traditional environments due to several constraints.
+2. It provides a large-scale simulation mechanism running in laptop-level hardware for SDN simulation, filling the lack of large-scale network simulation capability in various types of network simulation/emulation software. This software enables an acceptable system complexity and hardware cost for large-scale network simulation. Researchers are able to perform larger-scale simulations such as large-scale SDN data-center networks and large-scale software-defined mobile ad hoc networks. In addition, this framework can also help researchers conduct research on scheduling algorithms and topology design with large bandwidth and high traffic, which are difficult to obtain accurate results in traditional environments due to several constraints.
 
 3. Researchers are allowed to use Python as the programming language for controllers instead of C/C++, even running in OPNET. In addition, we provide a Ryu-like controller framework that provides APIs similar to Ryu, making it easy for controller developers to port existing Ryu Apps. Researchers could build controller algorithm prototypes rapidly.
 
