@@ -38,6 +38,11 @@ Configuration example shown below:
 # API
 See [OPSDN-API](./docs/opsdnpy-apis.md) for detailed api of opsdnpy.
 
+# Contributing to OPSDN
+All types of contributions are encouraged and valued!
+If you like this project and would like to make contributions, please follow the [contribution guide](./contributing.md).
+
+
 # Examples
 
 We provides two controller examples in the `src/opsdnpy/example` folder:
@@ -47,3 +52,5 @@ We provides two controller examples in the `src/opsdnpy/example` folder:
 # Tutorial
 
 We provide a tutorial for simple switch simulation in the examples. [Link](./docs/tutorial.md)
+
+
