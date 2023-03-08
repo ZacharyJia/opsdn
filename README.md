@@ -1,5 +1,17 @@
 # OPSDN
-[![PyPI](https://img.shields.io/pypi/v/opsdnpy)](https://pypi.org/project/opsdnpy/)
+[![PyPI](https://img.shields.io/pypi/v/opsdnpy)](https://pypi.org/project/opsdnpy/) [![DOI](https://joss.theoj.org/papers/10.21105/joss.04815/status.svg)](https://doi.org/10.21105/joss.04815)
+
+Note: This work has been published in the `Journal of Open Source Software`: [OPSDN](https://doi.org/10.21105/joss.04815). 
+Cite this if it is helpful to your research:
+```
+Jia et al., (2023). OPSDN: an enhanced SDN simulation framework for OPNET Modeler. Journal of Open Source Software, 8(83), 4815, https://doi.org/10.21105/joss.04815
+```
+or bibtex:
+```
+@article{Jia2023, doi = {10.21105/joss.04815}, url = {https://doi.org/10.21105/joss.04815}, year = {2023}, publisher = {The Open Journal}, volume = {8}, number = {83}, pages = {4815}, author = {Zequn Jia and Yantao Sun and Qiang Liu}, title = {OPSDN: an enhanced SDN simulation framework for OPNET Modeler}, journal = {Journal of Open Source Software} }
+```
+
+# Introduction
 
 OPSDN is an enhanced SDN simulation framework for OPNET Modeler (Now Riverbed Modeler).
 
